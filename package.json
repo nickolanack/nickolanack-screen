@@ -1,0 +1,22 @@
+{
+  "name": "nickolanack-screen",
+  "version": "1.0.0",
+  "description": "A remote desktop interface using node websockets and robotjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "npm rebuild --runtime=electron --target=1.4.3 --disturl=https://atom.io/download/atom-shell --abi=50"
+  },
+  "repository": "https://github.com/nickolanack/nickolanack-screen",
+  "keywords": [],
+  "author": "Nick Blackwell",
+  "license": "MIT",
+  "dependencies": {
+    "robotjs": "latest",
+    "tinywebsocketjs": "git://github.com/nickolanack/tinywebsocketjs.git#master"
+  },
+  "devDependencies": {
+    "electron": "^1.4.1"
+  }
+
+}

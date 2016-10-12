@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Screen</title>
+  </head>
+  <body>
+    <canvas id="canvas" style="max-width:100%;"></canvas>    
+  </body>
+
+  <script>
+    var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+
+	var port = 8086;
+	var compressTiles = false;
+
+	
+	var decompress = function(input, callback) {
+		if (!compressTiles) {
+			callback(input);
+			return;
+		}
+		throw 'Unsupported compression';
+	};
+
+	var decode=function(str){
+
+
+		var a=new Uint8ClampedArray(str.length/2);
+	  
+
+	    for(i=0;i<str.length;i++){
+	       a[i]=parseInt(str.substring(i*2, i*2+2), 16);
+	    
+	    }
+
+	    return a;
+
+	};
+
+
+	
+	setTimeout(function() {
+		var ws = new WebSocket('ws://localhost:' + port)
+		ws.onmessage = function(e) {
+			var data=e.data;
+
+			var message = data.split(':');
+			var name = message.shift();
+			var data = JSON.parse(message.join(':'));
+
+
+
+			if (name === 'screen.tile') {
+
+
+				var input=decode(data.tile);
+
+				
+				decompress(input, function(buffer) {
+
+
+					var length = data.width * data.height * 4;
+					var tile = new Uint8ClampedArray(buffer, 0, length);
+
+					context.putImageData(new ImageData(tile, data.width, data.height), data.x, data.y);
+					tileRaw = null;
+
+				});
+			}else if (name === 'screen.resize') {
+
+				context.canvas.width = data.width;
+				context.canvas.height = data.height;
+
+			}else{
+
+				console.log(e);
+
+				context.canvas.width = data.width;
+				context.canvas.height = data.height;
+
+			}
+
+		};
+		ws.onopen=function(){
+			ws.send(JSON.stringify({id:0, task:'screen_size', json:{}}));
+		}
+	}, 1000);
+  </script>
+</html>
