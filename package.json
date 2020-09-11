@@ -16,7 +16,7 @@
     "tinywebsocketjs": "git://github.com/nickolanack/tinywebsocketjs.git#master"
   },
   "devDependencies": {
-    "electron": "^1.4.1"
+    "electron": ">=7.2.4"
   }
 
 }
